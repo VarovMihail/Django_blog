@@ -4,12 +4,12 @@ from urllib.parse import urlencode, urljoin
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMultiAlternatives  #1
+from django.core.mail import EmailMultiAlternatives  # 1
 from django.db import transaction
-from django.template.loader import render_to_string   #2
+from django.template.loader import render_to_string  # 2
 from django.urls import reverse
 from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -62,8 +62,8 @@ class ConfirmationEmailHandler(BaseEmailHandler):
         }
 
 
-class UserService:     # класс для обработки всей логики, связанной с юзером
-    @staticmethod                                       # зачем? нам нужно будет у объекта его вызывать?
+class UserService:  # класс для обработки всей логики, связанной с юзером
+    @staticmethod  # зачем? нам нужно будет у объекта его вызывать?
     def is_user_exist(email: str) -> bool:
         return User.objects.filter(email=email).exists()  # почему не get? Будет ошибка
 
@@ -74,7 +74,7 @@ class UserService:     # класс для обработки всей логи�
 
     @transaction.atomic()
     def create_user(self, validated_data: dict):
-        data = CreateUserData(**validated_data) # зачем именованый кортеж? Для наглядности user?
+        data = CreateUserData(**validated_data)  # зачем именованый кортеж? Для наглядности user?
         print(f'{data=}')
         print(f'{validated_data=}')
         user = User.objects.create_user(
@@ -82,12 +82,12 @@ class UserService:     # класс для обработки всей логи�
             password=data.password_1,
             first_name=data.first_name,
             last_name=data.last_name,
-            is_active=False
+            is_active=False,
         )
         return user
 
-class VerifyEmail:
 
+class VerifyEmail:
     def verify_email(self, key: str):
         user = User.get_user_from_key(key)
         print(f'{user = }')
@@ -98,30 +98,30 @@ class VerifyEmail:
         user.is_active = True
         user.save(update_fields=['is_active'])
 
-
     def get_activate_url(self, user: User):
         url = reverse('auth_app:account_verification')
         full_url = urljoin(base=settings.FRONTEND_URL, url=url)
         return f"{full_url}?key={user.confirmation_key}"
 
-    def send_email(self, user: User):   # https://django.fun/ru/docs/django/3.1/topics/email/
-        data = {'first_name': user.first_name,
-                'last_name': user.last_name,
-                'key': user.confirmation_key,
-                'activate_url': self.get_activate_url(user)
-                }
+    def send_email(self, user: User):  # https://django.fun/ru/docs/django/3.1/topics/email/
+        data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'key': user.confirmation_key,
+            'activate_url': self.get_activate_url(user),
+        }
 
         html_content = render_to_string('auth_app/email/mail_message.html', data)
         message = EmailMultiAlternatives(subject='Подтверждение регистрации', to=[user.email])
         message.attach_alternative(html_content, 'text/html')
         message.send()
 
-class PasswordRecoveryEmail:
 
+class PasswordRecoveryEmail:
     def get_user_from_key(self, uid: str):
         try:
             uid = urlsafe_base64_decode(uid).decode()
-            user = User._default_manager.get(pk=uid)        # а так можно? Защищенный метод
+            user = User._default_manager.get(pk=uid)  # а так можно? Защищенный метод
         except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
             user = None
         return user
@@ -133,7 +133,6 @@ class PasswordRecoveryEmail:
         if not default_token_generator.check_token(user, token):
             raise ValidationError('Invalid key')
 
-
     def get_password_recovery_url(self, user: User):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
@@ -142,18 +141,17 @@ class PasswordRecoveryEmail:
         return f"{full_url}?uid={uid}&token={token}"
 
     def send_password_recovery_email(self, user: User):
-        data = {'first_name': user.first_name,
-                'last_name': user.last_name,
-                'activate_url': self.get_password_recovery_url(user)
-                }
+        data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'activate_url': self.get_password_recovery_url(user),
+        }
         print(data)
 
         html_content = render_to_string('auth_app/email/mail_reset_password.html', data)
         message = EmailMultiAlternatives(subject='Восстановление пароля', to=[user.email])
         message.attach_alternative(html_content, 'text/html')
         message.send()
-
-
 
 
 def full_logout(request):
@@ -193,9 +191,3 @@ def full_logout(request):
         response.data = {"detail": message}
         response.status_code = status.HTTP_200_OK
     return response
-
-
-
-
-
-

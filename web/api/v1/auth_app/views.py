@@ -5,12 +5,13 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework.response import Response
 
 from src import settings
+
 from . import serializers
-from .services import full_logout, User, UserService, VerifyEmail, PasswordRecoveryEmail
+from .services import PasswordRecoveryEmail, User, UserService, VerifyEmail, full_logout
 
 
 class SignUpView(GenericAPIView):
@@ -31,6 +32,7 @@ class SignUpView(GenericAPIView):
             status=status.HTTP_201_CREATED,
         )
 
+
 class VerifyEmailView(GenericAPIView):
     serializer_class = serializers.VerifyEmailSerializer
     permission_classes = (AllowAny,)
@@ -47,6 +49,7 @@ class VerifyEmailView(GenericAPIView):
             {'detail': _('Email verified')},
             status=status.HTTP_200_OK,
         )
+
 
 class LoginView(auth_views.LoginView):
     serializer_class = serializers.LoginSerializer
@@ -67,7 +70,6 @@ class PasswordResetView(GenericAPIView):
     serializer_class = serializers.PasswordResetSerializer
     permission_classes = (AllowAny,)
 
-
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -78,8 +80,6 @@ class PasswordResetView(GenericAPIView):
             {'detail': _('Password reset e-mail has been sent.')},
             status=status.HTTP_200_OK,
         )
-
-
 
 
 class PasswordResetConfirmView(GenericAPIView):
@@ -97,6 +97,3 @@ class PasswordResetConfirmView(GenericAPIView):
             {'detail': _('Password has been reset with the new password.')},
             status=status.HTTP_200_OK,
         )
-
-
-

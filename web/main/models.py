@@ -1,5 +1,4 @@
-from typing import TypeVar, Optional
-
+from typing import Optional, TypeVar
 
 from django.contrib.auth.models import AbstractUser
 from django.core import signing
@@ -7,6 +6,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from src import settings
+
 from .managers import UserManager
 
 UserType = TypeVar('UserType', bound='User')
@@ -18,7 +18,7 @@ class User(AbstractUser):
     email = models.EmailField(_('Email address'), unique=True)
 
     USERNAME_FIELD: str = 'email'
-    REQUIRED_FIELDS: list[str] = []           # теперь нет обязательных полей в модели
+    REQUIRED_FIELDS: list[str] = []  # теперь нет обязательных полей в модели
 
     objects = UserManager()  # type: ignore
 
@@ -33,13 +33,13 @@ class User(AbstractUser):
     def full_name(self) -> str:
         return super().get_full_name()
 
-    @property              # создать hmac signed base64 compressed JSON string
+    @property  # создать hmac signed base64 compressed JSON string
     def confirmation_key(self) -> str:
         print(f'{self.pk = }')
         return signing.dumps(obj=self.pk, key=settings.SECRET_KEY, salt='salt')
 
     @classmethod
-    def get_user_from_key(cls, key: str) -> Optional[UserType] :
+    def get_user_from_key(cls, key: str) -> Optional[UserType]:
         max_age = 15000
         try:
             user_id = signing.loads(key, key=settings.SECRET_KEY, salt='salt', max_age=max_age)
@@ -47,25 +47,3 @@ class User(AbstractUser):
         except (signing.SignatureExpired, signing.BadSignature, cls.DoesNotExist):
             return None
         return user
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
