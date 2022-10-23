@@ -18,7 +18,7 @@ services:
     env_file:
       - docker/dev/env/.env
       - docker/dev/env/.db.env
-      - docker/dev/env/.mailhog.env
+      - docker/dev/env/.email.env
       - docker/prod/env/.data.env
     depends_on: [db, redis]
     restart: unless-stopped
@@ -56,8 +56,8 @@ services:
       - redis_data:/data
     networks:
       - separated_network
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     healthcheck:
       test: [ "CMD", "redis-cli","ping" ]
       interval: 1m20s
@@ -77,7 +77,7 @@ services:
     env_file:
       - docker/dev/env/.env
       - docker/dev/env/.db.env
-      - docker/dev/env/.mailhog.env
+      - docker/dev/env/.email.env
       - docker/prod/env/.data.env
     depends_on: [redis]
     restart: unless-stopped

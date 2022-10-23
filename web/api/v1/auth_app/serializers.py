@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
-from api.v1.auth_app.services import AuthAppService
+from api.v1.auth_app.services import UserService
 
 User = get_user_model()
 
@@ -23,12 +23,12 @@ class UserSignUpSerializer(serializers.Serializer):
     password_1 = serializers.CharField(write_only=True, min_length=8)
     password_2 = serializers.CharField(write_only=True, min_length=8)
 
-    def validate_password1(self, password: str):
+    def validate_password_1(self, password: str):
         validate_password(password)
         return password
 
     def validate_email(self, email: str) -> str:
-        if AuthAppService.is_user_exist(email):
+        if UserService.is_user_exist(email):
             raise serializers.ValidationError(_('User is already registered with this e-mail address.'))
         return email
 
@@ -50,7 +50,7 @@ class LoginSerializer(serializers.Serializer):
         password = data.get('password')
         user = self.authenticate(email=email, password=password)
         if not user:
-            user = AuthAppService.get_user(email)
+            user = UserService.get_user(email)
             if not user:
                 msg = {'email': error_messages['wrong_credentials']}
                 raise serializers.ValidationError(msg)
@@ -66,6 +66,11 @@ class LoginSerializer(serializers.Serializer):
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
+    def validate_email(self, email: str) -> str:
+        if not UserService.is_user_exist(email):
+            raise serializers.ValidationError(_('User matching this e-mail address does not exist .'))
+        return email
+
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     password_1 = serializers.CharField(min_length=8, max_length=64)
@@ -73,6 +78,17 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     uid = serializers.CharField()
     token = serializers.CharField()
 
+    def validate_password_1(self, password: str):
+        validate_password(password)
+        return password
+
+    def validate(self, data: dict):
+        if data['password_1'] != data['password_2']:
+            raise serializers.ValidationError({'password_2': error_messages['password_not_match']})
+        return data
+
 
 class VerifyEmailSerializer(serializers.Serializer):
     key = serializers.CharField()
+
+

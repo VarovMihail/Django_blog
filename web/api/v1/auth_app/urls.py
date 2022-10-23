@@ -5,6 +5,8 @@ from . import views
 
 app_name = 'auth_app'
 
+# БЭКЕНД
+
 urlpatterns = [
     path('sing-in/', views.LoginView.as_view(), name='sign-in'),
     path('sign-up/', views.SignUpView.as_view(), name='sign-up'),
