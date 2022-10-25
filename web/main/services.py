@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 
 from main.decorators import except_shell
-from src.celery import app
 
 User = get_user_model()
 

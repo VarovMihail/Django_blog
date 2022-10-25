@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, NamedTuple, Optional
+from typing import TYPE_CHECKING, NamedTuple
 from urllib.parse import urlencode, urljoin
 
 from django.conf import settings
@@ -19,7 +19,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.email_services import BaseEmailHandler
 from main.decorators import except_shell
-from main.tasks import send_information_email
 
 if TYPE_CHECKING:
     from main.models import UserType
@@ -132,6 +131,7 @@ class PasswordRecoveryEmail:
         print(user)
         if not default_token_generator.check_token(user, token):
             raise ValidationError('Invalid key')
+        return user
 
     def get_password_recovery_url(self, user: User):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -152,6 +152,10 @@ class PasswordRecoveryEmail:
         message = EmailMultiAlternatives(subject='Восстановление пароля', to=[user.email])
         message.attach_alternative(html_content, 'text/html')
         message.send()
+
+    def change_user_password(self, user: User, raw_password: str):
+        user.set_password(raw_password)
+        user.save(update_fields=['password'])
 
 
 def full_logout(request):

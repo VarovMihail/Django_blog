@@ -1,14 +1,10 @@
 from dj_rest_auth import views as auth_views
 from django.contrib.auth import logout as django_logout
-from django.core import signing
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
-from rest_framework.generics import GenericAPIView, ListCreateAPIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
-
-from src import settings
 
 from . import serializers
 from .services import PasswordRecoveryEmail, User, UserService, VerifyEmail, full_logout
@@ -91,8 +87,8 @@ class PasswordResetConfirmView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         mail = PasswordRecoveryEmail()
-        mail.verify_email(token=serializer.data['token'], uid=serializer.data['uid'])
-
+        user = mail.verify_email(token=serializer.data['token'], uid=serializer.data['uid'])
+        mail.change_user_password(user, serializer.data['password_1'])
         return Response(
             {'detail': _('Password has been reset with the new password.')},
             status=status.HTTP_200_OK,
