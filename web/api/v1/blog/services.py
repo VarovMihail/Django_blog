@@ -1,7 +1,7 @@
 from django.db.models import Count
 
-from .choices import ArticleStatus
-from .models import Article, Category
+from blog.choices import ArticleStatus
+from blog.models import Article, Category
 
 
 class BlogService:
