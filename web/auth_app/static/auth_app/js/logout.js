@@ -10,6 +10,7 @@ function logout(e) {
     type: "POST",
     dataType: 'json',
     success: function (data) {
+      localStorage.removeItem('currentUserId')
       location.reload();
     },
     error: function (data) {

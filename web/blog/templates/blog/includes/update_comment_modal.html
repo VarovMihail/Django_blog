@@ -1,0 +1,35 @@
+<!--modal-->
+<div id="pwdModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h1 class="text-center">Edit comment</h1>
+      </div>
+      <div class="modal-body">
+              <div class="text-center">
+                <div class="panel-body">
+                  <fieldset>
+                    <form id="edit-form" role="form" >
+                      <div class="form-group">
+                        <textarea id="textarea" class="form-control" rows="5" name="content"></textarea>
+                      </div>
+                      <button type="submit" class="btn"><i class="fa fa-reply"></i> Отправить </button>
+                    </form>
+                  </fieldset>
+                  <div id="successPassReset" data-href="{% url 'auth_app:reset_email_sent' %}"></div>
+                </div>
+              </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-12">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

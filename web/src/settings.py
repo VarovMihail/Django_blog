@@ -3,6 +3,7 @@ import os
 from django.utils.translation import gettext_lazy as _
 
 from .additional_settings.celery_settings import *
+from .additional_settings.jwt_settings import *
 from .additional_settings.logging_settings import *
 from .additional_settings.smtp_settings import *
 from .additional_settings.summernote_settings import *
@@ -19,6 +20,8 @@ ALLOWED_HOSTS: list = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 USER_AVATAR_MAX_SIZE = 4.0
 
 AUTH_USER_MODEL = 'main.User'
+
+REST_USE_JWT = True
 
 SUPERUSER_EMAIL = os.environ.get('SUPERUSER_EMAIL', 'test@test.com')
 SUPERUSER_PASSWORD = os.environ.get('SUPERUSER_PASSWORD', 'tester26')
@@ -77,6 +80,7 @@ LOCAL_APPS = [
     'auth_app.apps.AuthAppConfig',
     'blog.apps.BlogConfig',
     'contact_us.apps.ContactUsConfig',
+    'user_profile.apps.UserProfileConfig'
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + LOCAL_APPS
@@ -102,6 +106,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3
 }
 
 

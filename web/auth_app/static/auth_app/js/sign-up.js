@@ -6,7 +6,7 @@ $(function () {
 function singUp(e) {
   let form = $(this);
   e.preventDefault();
-  console.log('here')
+  console.log(form.serialize())
   $.ajax({
     url: '/api/v1/auth/sign-up/',
     type: "POST",

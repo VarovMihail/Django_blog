@@ -2,10 +2,10 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
-
+from main.models import UserType
 from api.v1.auth_app.services import UserService
 
-User = get_user_model()
+User: UserType = get_user_model()
 
 error_messages = {
     'not_verified': _('Email not verified'),
@@ -22,6 +22,8 @@ class UserSignUpSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password_1 = serializers.CharField(write_only=True, min_length=8)
     password_2 = serializers.CharField(write_only=True, min_length=8)
+    gender = serializers.ChoiceField(choices=User.Gender.choices, required=False)
+    birthday = serializers.DateField(required=False)
 
     def validate_password_1(self, password: str):
         validate_password(password)

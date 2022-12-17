@@ -73,14 +73,23 @@ class UserService:  # класс для обработки всей логики
 
     @transaction.atomic()
     def create_user(self, validated_data: dict):
-        data = CreateUserData(**validated_data)  # зачем именованый кортеж? Для наглядности user?
-        print(f'{data=}')
-        print(f'{validated_data=}')
+        # data = CreateUserData(**validated_data)  # зачем именованный кортеж?
+        # print(f'{data=}')
+        # print(f'{validated_data=}')
+        # user = User.objects.create_user(
+        #     email=data.email,
+        #     password=data.password_1,
+        #     first_name=data.first_name,
+        #     last_name=data.last_name,
+        #     is_active=False,
+        # )
         user = User.objects.create_user(
-            email=data.email,
-            password=data.password_1,
-            first_name=data.first_name,
-            last_name=data.last_name,
+            email=validated_data['email'],
+            password=validated_data['password_1'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            gender=validated_data.get('gender'),
+            birthday=validated_data['birthday'],
             is_active=False,
         )
         return user
@@ -138,7 +147,9 @@ class PasswordRecoveryEmail:
         token = default_token_generator.make_token(user)
         url = reverse('auth_app:reset_email_sent')
         full_url = urljoin(base=settings.FRONTEND_URL, url=url)
-        return f"{full_url}?uid={uid}&token={token}"
+        query_params = urlencode({'uid': uid, 'token': token})
+        return f'{full_url}?{query_params}'
+        # return f"{full_url}?uid={uid}&token={token}"
 
     def send_password_recovery_email(self, user: User):
         data = {

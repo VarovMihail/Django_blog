@@ -1,3 +1,5 @@
+console.log('here')
+
 $(function () {
   $('#loginForm').submit(login);
   $('#forgotPasswordForm').submit(resetPassword);
@@ -6,7 +8,6 @@ $(function () {
 
 
 function resetPassword(e) {
-  console.log('reset_Password')
   let form = $(this);
    e.preventDefault();
   $.ajax({
@@ -31,6 +32,7 @@ function resetPassword(e) {
 
 
 function login(e) {
+  console.log('login')
   let form = $(this);
   e.preventDefault();
   $.ajax({
@@ -39,9 +41,16 @@ function login(e) {
     dataType: 'json',
     data: form.serialize(),
     success: function (data) {
+      console.log("success", data);
+      console.log(data.user.first_name);
+      localStorage.currentUserId = data.user.pk
+
       location.reload();
+
+
     },
     error: function (data) {
+      console.log("error", data);
       $("#emailGroup").addClass("has-error");
       $("#passwordGroup").addClass("has-error");
       $(".help-block").remove()

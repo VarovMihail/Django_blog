@@ -19,5 +19,4 @@ urlpatterns = [
         TemplateAPIView.as_view(template_name='auth_app/verify_email.html'),
         name='account_verification',
     ),
-    # передает в sign-up/verify/
 ]

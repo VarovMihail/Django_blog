@@ -1,4 +1,5 @@
 console.log('verify')
+
 $(function () {
 verifyToken()
 });
