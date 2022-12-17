@@ -10,6 +10,8 @@ from rest_framework.views import APIView
 
 from .serializers import SetTimeZoneSerializer
 
+from blog.models import Article
+
 if TYPE_CHECKING:
     from rest_framework.request import Request
 

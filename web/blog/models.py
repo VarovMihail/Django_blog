@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -43,6 +44,10 @@ class Article(models.Model):
     def short_title(self):
         return self.title[:30]
 
+    @property
+    def short_content(self):
+        return self.content[:300]
+
     def __str__(self):
         return '{title} - {author}'.format(title=self.short_title, author=self.author)
 
@@ -64,7 +69,7 @@ class Comment(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, related_name='comment_set', blank=True
     )
-    content = models.TextField(max_length=200)
+    content = models.TextField(max_length=300)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comment_set')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -74,3 +79,5 @@ class Comment(models.Model):
     class Meta:
         verbose_name = _('Comment')
         verbose_name_plural = _('Comments')
+
+

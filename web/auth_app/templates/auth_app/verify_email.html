@@ -1,0 +1,12 @@
+{% extends 'auth_app/base.html'%}
+{% load static %}
+
+{% block container %}
+<div class="row">
+  <h1>Отчет об ошибке</h1>
+</div>
+{% endblock container %}
+
+{% block jquery %}
+$.getScript('{% static 'auth_app/js/verify_email.js' %}');
+{% endblock %}

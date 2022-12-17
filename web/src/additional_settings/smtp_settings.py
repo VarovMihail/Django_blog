@@ -10,4 +10,6 @@ EMAIL_USE_SSL = int(environ.get('EMAIL_USE_SSL', 0))
 EMAIL_USE_TLS = int(environ.get('EMAIL_USE_TLS', 0))
 
 # Available choice: console, smtp, locmem, etc..
-EMAIL_BACKEND = 'django.core.mail.backends.{0}.EmailBackend'.format(environ.get('EMAIL_BACKEND', 'console'))
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+print(f'{EMAIL_HOST = }')

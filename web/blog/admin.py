@@ -6,7 +6,7 @@ from .models import Article, Category, Comment
 
 @admin.register(Article)
 class ArticleAdmin(SummernoteModelAdmin):
-    list_display = ('title', 'category', 'status', 'author')
+    list_display = ('title', 'category', 'status', 'author', 'created', 'updated', 'image')
     summernote_fields = ('content',)
     fields = ('category', 'title', 'status', 'author', 'image', 'content', 'created', 'updated')
     readonly_fields = ('created', 'updated')
@@ -21,4 +21,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'content', 'author', 'user', 'article', 'created', 'updated']
+    list_filter = ('article',)
+    ordering = ('-updated',)

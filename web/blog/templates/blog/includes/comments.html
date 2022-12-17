@@ -1,22 +1,18 @@
+{% load static %}
 <!-- the comment box -->
 <div class="well">
   <h4><i class="fa fa-paper-plane-o"></i> Leave a Comment:</h4>
-  <form role="form">
+  <form id="comment-form" role="form" action="{%  url 'api:v1:blog:comment' %}" method="post">
     <div class="form-group">
-      <textarea class="form-control" rows="3"></textarea>
+      <textarea id="textarea" class="form-control" rows="3" name="content"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i> Submit</button>
+    <button type="submit" class="btn"><i class="fa fa-reply"></i> Отправить </button>
   </form>
 </div>
 <hr>
 
 <!-- the comments -->
-<h3><i class="fa fa-comment"></i> User One says:
-  <small> 9:41 PM on August 24, 2014</small>
-</h3>
-<p>Excellent post! Thank You the great article, it was useful!</p>
+<div id="all-comments" class="col-lg-8">
 
-<h3><i class="fa fa-comment"></i> User Two says:
-  <small> 9:47 PM on August 24, 2014</small>
-</h3>
-<p>Excellent post! Thank You the great article, it was useful!</p>
+</div>
+
