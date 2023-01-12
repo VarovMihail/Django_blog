@@ -1,7 +1,9 @@
 {% extends "blog/base.html" %}
 {% load static main %}
 
-{% block head %}{% endblock head %}
+{% block head %}
+   <link href="{% static 'blog/css/comments.css' %}" rel="stylesheet">
+{% endblock head %}
 
 {% block container %}
 <div class="row">
@@ -10,6 +12,8 @@
   </div>
   <div class="col-lg-8">
     {% include 'blog/includes/comments.html' %}
+{#    <div id="commentList" class="row"></div>#}
+{#    {% include 'blog/includes/asd.html' %}#}
   </div>
   {% block right_sidebar %}
   {{ block.super }}
@@ -22,5 +26,6 @@
 
 
 {% block jquery %}
-$.getScript('{% static 'blog/js/detail.js' %}');
+$.getScript('{% static 'blog/js/detail_comment.js' %}');
+$.getScript('{% static 'blog/js/detail_article.js' %}');
 {% endblock %}

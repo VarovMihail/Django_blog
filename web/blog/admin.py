@@ -21,6 +21,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'content', 'author', 'user', 'article', 'created', 'updated']
+    list_display = ['id', 'content', 'author', 'user', 'article', 'created', 'updated', 'parent']
     list_filter = ('article',)
     ordering = ('-updated',)

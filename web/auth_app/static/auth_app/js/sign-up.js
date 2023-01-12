@@ -19,7 +19,34 @@ function singUp(e) {
     },
     error: function (data) {
       console.log("error", data);
-       alert('ERROR ' + data.responseText)
+      $(".help-block").remove()
+
+      if (data.responseJSON.first_name ) {
+      $("#first_name_group").addClass('has-error');   // это <div id="first_name_group"
+      $('#first_name_group').append('<div class="help-block">' + data.responseJSON.first_name + "</div>"
+      )};
+
+      if (data.responseJSON.last_name ) {
+      $("#last_name_group").addClass('has-error');
+      $('#last_name_group').append('<div class="help-block">' + data.responseJSON.last_name + "</div>"
+      )};
+
+      if (data.responseJSON.email ) {
+      $("#email").addClass('has-error');
+      $('#email').append('<div class="help-block">' + data.responseJSON.email + "</div>"
+      )};
+
+      if (data.responseJSON.password_1 ) {
+      $("#password_1").addClass('has-error');
+      $('#password_1').append('<div class="help-block">' + data.responseJSON.password_1 + "</div>"
+      )};
+
+      if (data.responseJSON.password_2 ) {
+      $("#password_2").addClass('has-error');
+      $('#password_2').append('<div class="help-block">' + data.responseJSON.password_2 + "</div>"
+      )}
+
+
     }
 
   })

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
 from main.models import UserType
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
@@ -41,32 +41,41 @@ class ChangePassSerializer(serializers.Serializer):
         instance.save(update_fields=['password'])
         return instance
 
-# class AvatarUpdateSerializer(serializers.Serializer):
-#     avatar = serializers.ImageField()
-#
-#     def save(self, **kwargs):
-#         print(self.validated_data)
-#         user = self.context['request'].user
-#         avatar = self.validated_data['avatar']
-#         user.avatar = avatar
-#         user.save(update_fields=['avatar'])
-#         return user
-
 
 class AvatarUpdateSerializer(serializers.ModelSerializer):
-    #avatar = serializers.ImageField()
+    avatar = serializers.ImageField()
 
     class Meta:
         model = User
         fields = ['avatar']
 
+    def save(self, **kwargs):
+        # print(self.instance.avatar)         # avatar/1/a.jpg             #default.jpg
+        # print(self.instance.avatar.url)     # /media/avatar/1/a.jpg      #media/default.jpg
+        # print(self.instance.avatar.path)    # /usr/src/web/media/default.jpg
 
-    # def save(self, **kwargs):
-    #     print(self.validated_data)
-    #     user = self.context['request'].user
-    #     avatar = self.validated_data['avatar']
-    #     print(avatar)
-    #     user.avatar = avatar
-    #     user.save(update_fields=['avatar'])
-    #     print(self.data)
-    #     return user.avatar
+        # if not self.instance.avatar.path == '/usr/src/web/media/default.jpg':
+        #     self.instance.avatar.delete()
+        self.instance.avatar.delete()
+        return super().save()
+
+
+class FillOutViewSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(min_length=2, max_length=100)
+    last_name = serializers.CharField(min_length=2, max_length=100)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'gender', 'birthday', 'avatar']
+        read_only_fields = ['email']
+
+
+
+
+
+
+
+
+
+
+

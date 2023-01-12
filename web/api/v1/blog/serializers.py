@@ -12,7 +12,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'full_name', 'email')
+        fields = ('id', 'full_name', 'email', 'avatar')
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -68,6 +68,9 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
 class CommentCreateSerializer(serializers.Serializer):
     content = serializers.CharField(max_length=300)
     article = serializers.CharField()
+    parent = serializers.IntegerField(write_only=True, allow_null=True)
+# TypeError: int() argument must be a string, a bytes-like object or a real number, not 'Comment'
+# поэтому     write_only=True
 
     def validate_article(self, article: str):
         if not Article.objects.filter(slug=article).exists():
@@ -80,32 +83,42 @@ class CommentCreateSerializer(serializers.Serializer):
             raise ValidationError('Forbidden word')
         return text
 
-
     def create(self, validated_data:dict):
         user = self.context['request'].user
+        print(f'{validated_data["parent"] = }')
         if isinstance(user, AnonymousUser):
             user = None
             email = 'AnonymousUser@mail.ru'
         else:
             email = user.email
         article = Article.objects.get(slug=validated_data['article'])
+        if validated_data['parent']:
+            parent = Comment.objects.get(id=validated_data['parent'])
+        else:
+            parent = None
         data = {
             'author': email,
             'user': user,
             'article': article,
-            'content': validated_data['content']
+            'content': validated_data['content'],
+            'parent': parent,
         }
         print(f'{validated_data = }')
         return Comment.objects.create(**data)
         #return super().create(data)
 
-
-
-class CommentListSerializer(serializers.ModelSerializer):
+class ChildrenCommentsSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Comment
-        fields = ['id', 'author', 'user', 'content', 'created', 'updated']
+        fields = ['id', 'author', 'user', 'content', 'created', 'updated', 'parent']
+
+class CommentListSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    children = ChildrenCommentsSerializer(many=True)
+    class Meta:
+        model = Comment
+        fields = ['id', 'author', 'user', 'content', 'created', 'updated', 'parent', 'children']
 
 
 class CommentUpdateSerializer(serializers.Serializer):

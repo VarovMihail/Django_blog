@@ -1,6 +1,7 @@
 from datetime import timedelta
 from os import environ
 
+JWT_AUTH_RETURN_EXPIRATION = True
 JWT_AUTH_REFRESH_COOKIE = 'refresh'
 JWT_AUTH_COOKIE = 'jwt-auth'
 REST_USE_JWT = True

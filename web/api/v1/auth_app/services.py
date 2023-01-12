@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple, Optional
 from urllib.parse import urlencode, urljoin
 
 from django.conf import settings
@@ -33,6 +33,8 @@ class CreateUserData(NamedTuple):
     email: str
     password_1: str
     password_2: str
+    gender: User.Gender
+    birthday: Optional[str] = None
 
 
 class ConfirmationEmailHandler(BaseEmailHandler):
@@ -62,9 +64,9 @@ class ConfirmationEmailHandler(BaseEmailHandler):
 
 
 class UserService:  # класс для обработки всей логики, связанной с юзером
-    @staticmethod  # зачем? нам нужно будет у объекта его вызывать?
+    @staticmethod
     def is_user_exist(email: str) -> bool:
-        return User.objects.filter(email=email).exists()  # почему не get? Будет ошибка
+        return User.objects.filter(email=email).exists()
 
     @staticmethod
     @except_shell((User.DoesNotExist,))
@@ -73,25 +75,26 @@ class UserService:  # класс для обработки всей логики
 
     @transaction.atomic()
     def create_user(self, validated_data: dict):
-        # data = CreateUserData(**validated_data)  # зачем именованный кортеж?
-        # print(f'{data=}')
-        # print(f'{validated_data=}')
-        # user = User.objects.create_user(
-        #     email=data.email,
-        #     password=data.password_1,
-        #     first_name=data.first_name,
-        #     last_name=data.last_name,
-        #     is_active=False,
-        # )
+        data = CreateUserData(**validated_data)
+        print(f'{data=}')
         user = User.objects.create_user(
-            email=validated_data['email'],
-            password=validated_data['password_1'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            gender=validated_data.get('gender'),
-            birthday=validated_data['birthday'],
+            email=data.email,
+            password=data.password_1,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            gender=data.gender,
+            birthday=data.birthday,
             is_active=False,
         )
+        # user = User.objects.create_user(
+        #     email=validated_data['email'],
+        #     password=validated_data['password_1'],
+        #     first_name=validated_data['first_name'],
+        #     last_name=validated_data['last_name'],
+        #     gender=validated_data.get('gender'),
+        #     birthday=validated_data['birthday'],
+        #     is_active=False,
+        # )
         return user
 
 

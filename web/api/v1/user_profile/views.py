@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.parsers import MultiPartParser
 
 from main.models import UserType
-from api.v1.user_profile.serializers import ChangePassSerializer, AvatarUpdateSerializer
+from api.v1.user_profile.serializers import ChangePassSerializer, AvatarUpdateSerializer, FillOutViewSerializer
 
 User: UserType = get_user_model()
 
@@ -15,6 +15,7 @@ class ChangePassAPIView(generics.UpdateAPIView):
     serializer_class = ChangePassSerializer
 
     def get_object(self):
+        print(f'{self.request.user = }')
         return self.request.user
 
 
@@ -28,6 +29,16 @@ class AvatarUpdateView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         print(serializer.data)
+
         return Response(serializer.data)
+
+
+class FillOutView(generics.RetrieveUpdateAPIView):
+    serializer_class = FillOutViewSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
 
 

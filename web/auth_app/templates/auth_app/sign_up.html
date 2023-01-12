@@ -14,17 +14,20 @@
       <legend>Sign Up</legend>
       <h4>It's free and always will be.</h4>
       <div class="row">
-        <div class="col-xs-6 col-md-6">
-          <input type="text" name="first_name" value="" class="form-control input-lg" placeholder="First Name"/></div>
-        <div class="col-xs-6 col-md-6">
+        <div id="first_name_group" class="col-xs-6 col-md-6">
+          <input type="text" name="first_name" value="" class="form-control input-lg has-error" placeholder="First Name"/></div>
+        <div id="last_name_group" class="col-xs-6 col-md-6">
           <input type="text" name="last_name" value="" class="form-control input-lg" placeholder="Last Name"/></div>
       </div>
-      <input type="text" name="email" value="" class="form-control input-lg" placeholder="Your Email"/>
+      <div id="email">
+        <input  type="text" name="email" value="" class="form-control input-lg" placeholder="Your Email"/>
+      </div>
+
       {% include 'auth_app/includes/password.html' %}
       {% include 'auth_app/includes/birthday.html' %}
       {% include 'auth_app/includes/gender.html' %}
       <br/>
-      <span class="help-block">By clicking Create my account, you agree to our Terms and that you have read our Data Use Policy, including our Cookie Use.</span>
+      <span class="help-block1">By clicking Create my account, you agree to our Terms and that you have read our Data Use Policy, including our Cookie Use.</span>
       <button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">Create my account </button>
     </form>
   </div>
