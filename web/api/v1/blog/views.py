@@ -41,10 +41,13 @@ class CommentListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CommentListSerializer
 
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        #article = Article.objects.get(slug=slug)
+        return Comment.objects.filter(article__slug=slug, parent__isnull=True).order_by('-updated')
+
     def get(self, request, slug):
-        article = Article.objects.get(slug=slug)
-        self.queryset = Comment.objects.filter(article=article).order_by('-updated')
-        page = self.paginate_queryset(self.queryset)
+        page = self.paginate_queryset(self.get_queryset())
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
@@ -53,8 +56,8 @@ class CommentListView(generics.ListAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CommentUpdateView(generics.UpdateAPIView):
-    queryset = Comment.objects.all()
     permission_classes = (AllowAny,)
+    queryset = Comment.objects.all()
     serializer_class = CommentUpdateSerializer
 
     # def patch(self, request, pk):

@@ -73,11 +73,25 @@ class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comment_set')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', null=True, blank=True)
 
     objects = models.Manager()
 
     class Meta:
         verbose_name = _('Comment')
         verbose_name_plural = _('Comments')
+
+
+
+class Like(models.Model):
+    class Vote(models.IntegerChoices):
+        LIKE = 1
+        DISLIKE = -1
+
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    created = models.DateTimeField(auto_now=True)
+    vote = models.SmallIntegerField(choices=Vote.choices)
 
 

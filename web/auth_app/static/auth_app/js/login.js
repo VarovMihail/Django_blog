@@ -1,4 +1,4 @@
-console.log('here')
+console.log('login page')
 
 $(function () {
   $('#loginForm').submit(login);
@@ -16,12 +16,14 @@ function resetPassword(e) {
     data: form.serialize(),
     success: function (data) {
       console.log("success", data)
+      $('#pwdModal h1').text('')
       $('.modal-body').html('<h1>Check your inbox. We\'ve emailed you instructions for setting your password.</h1>')
       // $('#pwdModal h1').text("Check your inbox. We've emailed you instructions for setting your password.")
     },
     error: function (data) {
       console.log("error", data)
-       $('#pwdModal h1').text('User does not exist')
+      $('#pwdModal h1').text('User does not exist')
+
 
     }
 
@@ -43,13 +45,20 @@ function login(e) {
     success: function (data) {
       console.log("success", data);
       console.log(data.user.first_name);
+
+      localStorage.access_token_expiration = data.access_token_expiration
       localStorage.currentUserId = data.user.pk
+      sessionStorage.currentUserId = data.user.pk
 
       location.reload();
+      // $(function () {
+      //    Toast.show(`Success login`, 'success')
+      // })
 
 
     },
     error: function (data) {
+      Toast.show(`${data.responseText}`, 'error')
       console.log("error", data);
       $("#emailGroup").addClass("has-error");
       $("#passwordGroup").addClass("has-error");

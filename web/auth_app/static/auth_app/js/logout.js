@@ -11,7 +11,8 @@ function logout(e) {
     dataType: 'json',
     success: function (data) {
       localStorage.removeItem('currentUserId')
-      location.reload();
+        //location.reload();
+      location.href = '/'
     },
     error: function (data) {
       console.log('error', data)

@@ -1,0 +1,73 @@
+{#{% load main %}#}
+{#<!-- the comment box -->#}
+{#<div class="well">#}
+{#  <h4><i class="fa fa-paper-plane-o"></i> Leave a Comment:</h4>#}
+{#  <form id="formReview" action="{% url 'blog:comment-list' %}" method="post">#}
+{#    {% csrf_token %}#}
+{#    <input type="hidden" name="parent_id" id="commentParent" value="">#}
+{#    <input type="hidden" name="article" value="{{ id }}">#}
+{#    {% if not user.is_authenticated %}#}
+{#    <div id="emailGroup" class="col-sm-6 form-group">#}
+{#      <label for="author"> Email: </label>#}
+{#      <input type="email" class="form-control" name="author" id="author" value="" required>#}
+{#    </div>#}
+{#    {% endif %}#}
+{#    <div id="textAreaGroup" class="form-group">#}
+{#      <textarea id="textComment" name="content" class="form-control" rows="3"></textarea>#}
+{#    </div>#}
+{#    <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i> Submit</button>#}
+{#  </form>#}
+{#</div>#}
+{#<hr>#}
+
+<!-- the comments -->
+
+    <div class="comments-container">
+		<h1>Comments (10)</h1>
+		<ul id="paginationComment" class="comments-list" data-id="{{ id }}" data-href-next="#">
+{#      {% for comment in comments %}#}
+      <li>
+				<div class="comment-main-level">
+					<div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
+					<div class="comment-box">
+						<div class="comment-head">
+							<h6 class="comment-name by-author"><a href="#">Super Man</a></h6>
+							<span>data</span>
+              <a href="#formReview" onclick="addChildToComment('{{ comment.author }}', '{{ comment.id }}')"><i class="fa fa-reply"></i></a>
+               <i class="fa fa-heart commentLike"
+                  data-id="{{ comment.id }}" data-vote=1
+{#                  data-href="{% url 'actions:like_dislike' %}"#}
+                  data-type="comment"></i>
+						</div>
+						<div class="comment-content">
+							hello word
+						</div>
+					</div>
+				</div>
+				<!-- Comments reply -->
+				<ul class="comments-list reply-list">
+{#          {% for child in comment.child %}#}
+					<li>
+						<div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
+
+						<div class="comment-box">
+							<div class="comment-head">
+								<h6 class="comment-name"><a href="#"> Iron Man</a></h6>
+								<span>data</span>
+                <i class="fa fa-heart commentLike"
+                   data-id="{{ child.id }}" data-vote=1
+{#                   data-type="comment" data-href="{% url 'actions:like_dislike' %}">#}
+                </i>
+							</div>
+							<div class="comment-content">
+								hello too
+							</div>
+						</div>
+					</li>
+{#          {% endfor %}#}
+				</ul>
+			</li>
+{#       {% endfor %}#}
+		</ul>
+	</div>
+

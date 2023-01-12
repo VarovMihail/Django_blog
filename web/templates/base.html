@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
+  <link href={% static 'css/toast.css'  %} rel="stylesheet">
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -33,10 +34,14 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="{% static 'js/toast.js' %}"></script>
+<script src="{% static 'js/check_currentUser.js' %}"></script>
+
 
 <script>
   $(document).ready(function(){
     $.getScript('{% static 'auth_app/js/logout.js' %}');
+    Toast.init()
     {% block jquery %} {% endblock jquery %}
 })
 </script>

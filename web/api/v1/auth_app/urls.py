@@ -1,11 +1,10 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView, TokenObtainPairView
 
 from . import views
 
 app_name = 'auth_app'
 
-# БЭКЕНД
 
 urlpatterns = [
     path('sing-in/', views.LoginView.as_view(), name='sign-in'),
@@ -16,4 +15,5 @@ urlpatterns = [
     path('password/reset/confirm/', views.PasswordResetConfirmView.as_view(), name='reset-password-confirm'),
     path('token/refresh/', TokenRefreshView.as_view()),
     path('token/verify/', TokenVerifyView.as_view()),
+    path('token/', TokenObtainPairView.as_view()),      # добавил посмотреть
 ]

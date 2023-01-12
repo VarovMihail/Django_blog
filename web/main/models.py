@@ -15,6 +15,7 @@ def upload_avatar_path(instance, filename):
     print(instance, instance.pk, filename)
     return f'avatar/{instance.pk}/{filename}'
 
+
 class User(AbstractUser):
 
     class Gender(models.IntegerChoices):
@@ -26,7 +27,8 @@ class User(AbstractUser):
     email = models.EmailField(_('Email address'), unique=True)
     gender = models.PositiveSmallIntegerField(choices=Gender.choices, default=Gender.UNKNOWN)
     birthday = models.DateField(blank=True, null=True)
-    avatar = models.ImageField(default='default.jpg', blank=True, upload_to=upload_avatar_path)
+    #avatar = models.ImageField(default='default.jpg', blank=True, upload_to=upload_avatar_path)
+    avatar = models.ImageField(null=True, blank=True, upload_to=upload_avatar_path)
 
     USERNAME_FIELD: str = 'email'
     REQUIRED_FIELDS: list[str] = []
