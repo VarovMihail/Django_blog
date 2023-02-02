@@ -20,6 +20,9 @@
       <li {% if selected == 'blog' %}class="active"{% endif %}><a href="{% url 'blog:blog-list' %}">
       <i class="fa fa-book"></i> Posts</a>
       </li>
+      <li {% if selected == 'user_list' %}class="active"{% endif %}><a href="{% url 'user_profile:user_list' %}">
+      <i class="fa fa-users" ></i> Users</a>
+      </li>
       <li {% if selected == 'contact_us' %}class="active"{% endif %}><a href="{% url 'contact_us:index' %}">
       <i class="fa fa-envelope"></i> Contact</a>
       </li>

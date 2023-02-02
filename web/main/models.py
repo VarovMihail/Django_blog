@@ -11,6 +11,7 @@ from .managers import UserManager
 
 UserType = TypeVar('UserType', bound='User')
 
+
 def upload_avatar_path(instance, filename):
     print(instance, instance.pk, filename)
     return f'avatar/{instance.pk}/{filename}'
@@ -25,10 +26,30 @@ class User(AbstractUser):
 
     username = None  # type: ignore
     email = models.EmailField(_('Email address'), unique=True)
-    gender = models.PositiveSmallIntegerField(choices=Gender.choices, default=Gender.UNKNOWN)
+    gender = models.PositiveSmallIntegerField('пол', choices=Gender.choices, default=Gender.UNKNOWN)
     birthday = models.DateField(blank=True, null=True)
     #avatar = models.ImageField(default='default.jpg', blank=True, upload_to=upload_avatar_path)
     avatar = models.ImageField(null=True, blank=True, upload_to=upload_avatar_path)
+    following = models.ManyToManyField('self',
+                                       through='action.Follower',
+                                       # through_fields=('follower', 'content_maker'),
+                                       related_name='followers',
+                                       symmetrical=False)
+
+    # user.following - список тех на кого я подписан
+    # user.followers - получить список тех кто подписан на меня:
+    # follower.followers.all, content_maker.followers.all
+
+    # Spider Man / test3 @ test.com
+    # Я подписан на(user.following.all):
+    # < QuerySet[ < User: test @ test.com >, < User: test2 @ test.com >, < User: test1 @ test.com >] >
+    #
+    # Я подписан на(user.following_to.all):
+    # < QuerySet[ < Follower: Follower object(8) >, < Follower: Follower object(7) >, < Follower: Follower object(1) >] >
+    #
+    # Они подписаны на меня - моя роль - контентмейкер(user.content_maker.all):
+    # < QuerySet[ < Follower: Follower object(3) >] >
+
 
     USERNAME_FIELD: str = 'email'
     REQUIRED_FIELDS: list[str] = []
@@ -41,6 +62,9 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return self.email
+
+    def __str__(self) -> str:
+        return self.full_name
 
     @property
     def full_name(self) -> str:
@@ -60,3 +84,4 @@ class User(AbstractUser):
         except (signing.SignatureExpired, signing.BadSignature, cls.DoesNotExist):
             return None
         return user
+

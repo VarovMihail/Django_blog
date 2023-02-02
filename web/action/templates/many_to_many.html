@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>many to many</title>
+</head>
+<body>
+{% for user in users %}
+  <p>{{ user.full_name }} /{{ user.email }}</p>
+  <p>(user.following.all) : {{ user.following.all }}</p>
+  <p>(user.following_set.all) : {{ user.following_set.all }}</p>
+
+  <p>(user.followers.all) : {{ user.followers.all }}</p>
+
+
+
+  <p>Они подписаны на меня - моя роль - контентмейкер  (user.content_maker.all) : {{ user.content_maker.all }}</p>
+
+
+
+   {% for follower in user.following_to.all %}
+     <p>{{ follower.follower.full_name }}</p>
+     <p>{{ follower.content_maker.full_name }}</p>
+     <p>{{ follower.created }}</p>
+   {% endfor %}
+
+  <p>--------------------------------------------------------------</p>
+
+{% endfor %}
+</body>
+</html>

@@ -1,0 +1,109 @@
+{% extends "user_profile/base.html" %}
+{% load static i18n %}
+
+{% block container %}
+
+{#  <div class="toast">Sample toast message</div>#}
+<div class="row">
+  <div class="col-sm-10"><h1>{{ full_name }}</h1></div>
+  <div class="col-sm-2">
+    <a href="{% url 'user_profile:user_list' %}" class="pull-right">
+      <img title="profile image" class="img-circle img-responsive"
+           src="{% static 'user_profile/user_list.jpg' %}">
+    </a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-3"><!--left col-->
+    <div id="avatar-div" class="text-center">
+  <img src="{{ avatar }}" class="avatar img-circle img-thumbnail" alt="avatar" id="avatar">
+  <svg hidden id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><defs><style>.cls-1{fill:#b3b3b3;fill-rule:evenodd;}.cls-2{fill:#fff;}</style></defs><title>no-profile-picture</title><polygon class="cls-1" points="0 0 122.88 0 122.88 122.88 0 122.88 0 0 0 0"/><path class="cls-2" d="M48.64,77.72c.65-1.48,1.24-3.1,1.61-4.19a52.43,52.43,0,0,1-4.22-6L41.76,60.7a12.55,12.55,0,0,1-2.43-6.21,4.94,4.94,0,0,1,.43-2.23,4.1,4.1,0,0,1,1.47-1.71,4.73,4.73,0,0,1,1-.52,107.7,107.7,0,0,1-.2-12.23A16.87,16.87,0,0,1,42.58,35a16.39,16.39,0,0,1,7.22-9.2,22.79,22.79,0,0,1,6.05-2.69c1.37-.39-1.15-4.72.25-4.87,6.79-.7,17.77,5.5,22.51,10.62A16.63,16.63,0,0,1,82.8,39.37l-.27,11.1h0a3.06,3.06,0,0,1,2.25,2.32c.35,1.36,0,3.25-1.18,5.84h0a.37.37,0,0,1-.07.14l-4.87,8a41.6,41.6,0,0,1-6,8.24c.23.32.45.63.66.94,8.25,12.11,19.38,5.88,32.32,15.36l-.38.51v12.82H17.22V91.47h.24a1.14,1.14,0,0,1,.56-.61C26.4,86,45.72,84.35,48.64,77.72Z"/></svg>
+
+</div>
+    <br>
+ {% include 'user_profile/include/block_followers.html' %}
+
+  </div><!--/col-3-->
+
+
+
+    <div class="tab-content">
+         <div class="tab-pane active" id="home">
+  <hr>
+  <form class="form" action="{% url 'user_profile:profile' %}" method="put" id="registrationForm">
+    <div class="form-group">
+
+      <div id="first_name_div" class="col-xs-6">
+        <label for="first_name"><h4>First name</h4></label>
+        <input disabled type="text" class="form-control" name="first_name" id="first_name" placeholder="{{ first_name }}"
+               title="enter your first name if any.">
+      </div>
+    </div>
+    <div class="form-group">
+
+      <div id="last_name_div" class="col-xs-6">
+        <label for="last_name"><h4>Last name</h4></label>
+        <input disabled type="text" class="form-control" name="last_name" id="last_name" placeholder="{{ last_name }}"
+               title="enter your last name if any.">
+      </div>
+    </div>
+
+    <div class="form-group">
+
+      <div id="email_div" class="col-xs-6">
+        <label for="email"><h4>Email</h4></label>
+        <input disabled type="text" class="form-control" name="email" id="email" placeholder="{{ email }}"
+               title="it is your email.">
+      </div>
+    </div>
+
+    <div class="form-group">
+
+      <div class="col-xs-6">
+        {% load i18n %}
+          <label for="birthday"><h4>Birthday</h4></label>
+          <input disabled type="date" name="birthday" id="birthday" class="form-control input-lg" min="">
+      </div>
+    </div>
+
+{#    <div class="form-group">#}
+{##}
+{#      <div class="col-xs-6">#}
+{#        {% load i18n %}#}
+{#          <label for="birthday"><h4>Birthday</h4></label>#}
+{#          <input disabled type="date" name="birthday" id="birthday" class="form-control input-lg" min="">#}
+{#      </div>#}
+{#    </div>#}
+
+
+  </form>
+
+<div class="row">
+  <div class="container">
+      <div class="col-xs-12">
+        <button id="subscribe" class="btn btn-lg btn-success" data-id=1 type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Subscribe</button>
+      </div>
+  </div>
+<br>
+  <div class="container">
+        <div class="col-xs-12">
+          <button id="message" class="btn btn-warning" data-id=1 type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Send message</button>
+        </div>
+  </div>
+</div>
+
+
+</div><!--/tab-pane-->
+
+
+    </div><!--/tab-pane-->
+  </div><!--/tab-content-->
+
+{% include 'user_profile/include/modal_followers.html' %}
+
+
+{% endblock container %}
+
+{% block jquery %}
+$.getScript('{% static 'user_profile/js/user_info.js' %}');
+{% endblock %}

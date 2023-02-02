@@ -1,9 +1,12 @@
+from django.contrib.auth.models import AnonymousUser
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
+from action.choices import SubscribeStatus
+from api.v1.action.services import FollowService
 from main.models import UserType
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
-
 
 User: UserType = get_user_model()
 
@@ -61,18 +64,37 @@ class AvatarUpdateSerializer(serializers.ModelSerializer):
 
 
 class FillOutViewSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(min_length=2, max_length=100)
-    last_name = serializers.CharField(min_length=2, max_length=100)
+    following_count = serializers.IntegerField()
+    followers_count = serializers.IntegerField()
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'gender', 'birthday', 'avatar']
+        fields = ['id', 'first_name', 'last_name', 'email', 'gender', 'birthday', 'avatar', 'following_count', 'followers_count']
         read_only_fields = ['email']
 
 
+class AllUsersSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'gender', 'birthday', 'avatar']
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    subscribe_status = serializers.SerializerMethodField(method_name='get_subscribe_status')
+    followers_count = serializers.IntegerField()
+    following_count = serializers.IntegerField()
 
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'full_name', 'email', 'gender', 'birthday', 'avatar',
+                  'subscribe_status', 'followers_count', 'following_count']
+
+    def get_subscribe_status(self, obj: User) -> int:
+        follow_services = FollowService(
+            current_user=self.context['request'].user,
+            content_maker_id=obj.id)
+        return follow_services.get_subscribe_status()
 
 
 

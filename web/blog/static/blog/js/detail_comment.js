@@ -92,22 +92,15 @@ function updateComments(data) {
   console.log(ul)
 
   for (let comment of data.results) {
-    let commentCreator;
-    let commentCreatorId;
 
-    try {
-      commentCreator = comment.user.full_name
-      commentCreatorId = comment.user.id
-    } catch(err) {
-      commentCreator = 'Anonimus'
-      commentCreatorId = 0
-    }
     // html - ПОЛНЫЙ СПИСОК КОММЕНТАРИЕВ И ДОЧЕРНИХ КОММЕНТАРИЕВ
-    let html = commentHtml(comment, commentCreator, commentCreatorId, currentUserId)
+    let html = commentHtml(comment, currentUserId)
     ul.append(html)
-    {$('.fa-pencil').click(editComment)}
-  }
 
+  }
+  $('.fa-pencil').click(editComment)
+  $('.fa-heart').click(likeDislikeComment)
+  $('.fa-heart-o').click(likeDislikeComment)
 
   if (data.next){
     console.log('data.next', data.next)
@@ -129,9 +122,10 @@ function updateComments(data) {
 }
 
 function nextPrevComments(e) {
-  e.preventDefault()      // это будет ошибка если назначить функцию через onclick="UpDownCommentsList()"
-  const link = e.path[0].href;
-  console.log(link)
+  e.preventDefault()      // это будет ошибка если назначить функцию через onclick="nextPrevComments()"
+  //const link = e.path[0].href;
+  let link = $(this).attr('href')
+  console.log('link', link)
   $.ajax({
     url: link,
     type: 'get',
@@ -144,17 +138,18 @@ function nextPrevComments(e) {
 }
 
 function addChildToComment (commentId, commentCreator) {
-  console.log('commentId', commentId, commentCreator)
   $('#textarea')[0].innerText = `${commentCreator}, `
+  $('.well')[0].scrollIntoView(true)
   localStorage.setItem('commentId', commentId)
 }
 
 
 // СОЗДАЕМ ПОЛНЫЙ СПИСОК КОММЕНТАРИЕВ И ДОЧЕРНИХ КОММЕНТАРИЕВ
-function commentHtml(comment, commentCreator, commentCreatorId, currentUserId) {
+function commentHtml(comment, currentUserId) {
 
   const updated = (new Date(comment.updated)).toLocaleString()
-  let userName = (comment.user == null) ? 'Anonymous' : comment.user.full_name
+  let commentCreator = (comment.user == null) ? 'Anonymous' : comment.user.full_name
+  let commentCreatorId = (commentCreator == 'Anonymous') ? 0 : comment.user.id
   let avatar = (comment.user == null) ? "http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" :
     (comment.user.avatar == null) ? "https://oir.mobi/uploads/posts/2022-08/1661385261_40-oir-mobi-p-standartnii-fon-vatsap-instagram-56.png" : comment.user.avatar
 
@@ -169,10 +164,10 @@ function commentHtml(comment, commentCreator, commentCreatorId, currentUserId) {
                 <div class="comment-avatar"><img src=${avatar} alt=""></div>
                 <div class="comment-box">
                     <div class="comment-head">
-                        <h6 class="comment-name by-author"><a href="#">${userName}</a></h6>
+                        <h6 class="comment-name by-author"><a href="#">${commentCreator}</a></h6>
                         <span>${updated}</span>
                         <a href="#formReview" onclick="addChildToComment('${comment.id}', '${commentCreator}')"><i class="fa fa-reply"></i></a>
-                        <i class="fa fa-heart commentLike" data-id="{{ comment.id }}" data-vote=1 data-type="comment"></i>
+
                         `
   let htmlListEnd = `
                     </div>
@@ -183,36 +178,27 @@ function commentHtml(comment, commentCreator, commentCreatorId, currentUserId) {
         </li>
 
   `
+  let likeButtonBlack = `<i class="fa fa-heart commentLike" data-id=${comment.id} data-vote=-1 data-type="comment"> ${comment.likes}</i>`
+  let likeButtonWhite = `<i class="fa fa-heart-o commentLike" data-id=${comment.id} data-vote=1 data-type="comment"> ${comment.likes}</i>`
+  if (comment.like_status == 1) {htmlList += likeButtonBlack} else {htmlList += likeButtonWhite}
 
-  // const editButton = `<a id="edit${comment.id}" onclick="editComment(${comment.id})" className="btn btn-read-more" href="#" data-target="#pwdModal" data-toggle="modal">Edit</a>&nbsp; &nbsp;`
-  // const commentButton = `<a id="comment${comment.id}" onclick="commentComment(${comment.id}, '${commentCreator}')" className="btn btn-read-more" href="#">Comment</a><br>`
   let editButton = ` <i class="fa fa-pencil" aria-hidden="true"  data-comment-id=${comment.id}></i>`
   if (currentUserId == commentCreatorId) {
   htmlList += editButton
   }
-  htmlList += htmlListEnd
 
+
+
+  htmlList += htmlListEnd
   return htmlList
 }
 
 // ДЕЛАЕМ 1 ДОЧЕРНИЙ КОММЕНТАРИЙ
 const childCommentHtml = (child, currentUserId) => {
 
-   let commentCreator;
-   let commentCreatorId;
-
-   try {
-     commentCreator = child.user.full_name
-     commentCreatorId = child.user.id
-   } catch (err) {
-     commentCreator = 'Anonimus'
-     commentCreatorId = 0
-   }
-
-  console.log('child', child)
-  console.log(commentCreatorId, currentUserId)
-  const updated = (new Date(child.updated)).toLocaleString()
-  let userName = (child.user == null) ? 'Anonymous' : child.user.full_name
+  let updated = (new Date(child.updated)).toLocaleString()
+  let commentCreator = (child.user == null) ? 'Anonymous' : child.user.full_name
+  let commentCreatorId = (commentCreator == 'Anonymous') ? 0 : child.user.id
   let avatar = (child.user == null) ? "http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" :
     (child.user.avatar == null) ? "https://oir.mobi/uploads/posts/2022-08/1661385261_40-oir-mobi-p-standartnii-fon-vatsap-instagram-56.png" : child.user.avatar
 
@@ -222,9 +208,8 @@ const childCommentHtml = (child, currentUserId) => {
         <div class="comment-avatar"><img src=${avatar} alt=""></div>
         <div class="comment-box">
             <div class="comment-head">
-                <h6 class="comment-name"><a href="#"> ${userName}</a></h6>
+                <h6 class="comment-name"><a href="#"> ${commentCreator}</a></h6>
                 <span>${updated}</span>
-                <i class="fa fa-heart commentLike" data-id="{{ child.id }}" data-vote=1 data-type="comment"></i>
 
                 `
   let htmlListEnd = `
@@ -233,8 +218,11 @@ const childCommentHtml = (child, currentUserId) => {
         </div>
     </li>
   `
+  let likeButtonBlack = `<i class="fa fa-heart commentLike" data-id=${child.id} data-vote=-1 data-type="comment"> ${child.likes}</i>`
+  let likeButtonWhite = `<i class="fa fa-heart-o commentLike" data-id=${child.id} data-vote=1 data-type="comment"> ${child.likes}</i>`
+  if (child.like_status == 1) {htmlList += likeButtonBlack} else {htmlList += likeButtonWhite}
 
-   let editButton = ` <i class="fa fa-pencil" aria-hidden="true" data-comment-id=${child.id}></i>`
+  let editButton = ` <i class="fa fa-pencil" aria-hidden="true" data-comment-id=${child.id}></i>`
   if (currentUserId == commentCreatorId) {
   htmlList += editButton
   }
@@ -275,4 +263,40 @@ function saveEditComment(e) {
 }
 
 
+function likeDislikeComment () {
+  console.log('likeDislike')
+  console.log($(this).attr('data-id'))
+  console.log('vote', $(this).attr('data-vote'))
+
+  localStorage.dataId = $(this).attr('data-id')
+  let vote = $(this).attr('data-vote')
+  let objectId = $(this).attr('data-id')
+  let data = { 'vote': vote, 'object_id': objectId, 'model': 'comment'}
+  console.log(data)
+
+  $.ajax({
+    url: `/api/v1/action/like/`,
+    type: 'POST',
+    data: data,
+    success: function (data) {
+      //parseData = JSON.parse(data)
+      console.log('success likeDislike', data)
+      //Toast.show(`${data.result} ${data.like_status}`, 'success')
+      dataId = localStorage.dataId
+      likeButton = $(`[data-id = ${dataId}]`)
+      likeButton.text(` ${data.likes}`)
+      if (data.like_status == 1) {
+        likeButton.attr('class', 'fa fa-heart commentLike');
+        likeButton.attr('data-vote', '-1');
+      } else {
+        likeButton.attr('class', 'fa fa-heart-o commentLike');
+        likeButton.attr('data-vote', '1');
+      }
+    },
+    error: function (data) {
+      console.log('error likeDislike', data)
+      Toast.show(`${data.responseJSON.detail}`, 'error')
+    }
+  })
+}
 

@@ -3,6 +3,7 @@ $(function () {
 blogList()
 });
 
+// получить список статей
 function blogList() {
   $.ajax({
     url: '/api/v1/article/posts/',
@@ -24,20 +25,21 @@ function updateArticleList(data) {
     //const updatedTime = uTime.getFullYear() + '-' + uTime.getMonth() + '-' + uTime.getDate()
     const updatedTime = `${uTime.getFullYear()}-${uTime.getMonth()}-${uTime.getDate()}`
     let html = articleHtml(article.title,
-      article.author.full_name,
-      article.image,
-      article.short_content,
-      updatedTime,
-      article.url,
-      article.comment_set.length
+                          article.author.full_name,
+                          article.image,
+                          article.short_content,
+                          updatedTime,
+                          article.url,
+                          article.comment_set.length,
+                          article.likes
       )
     div.append(html)
   })
  if (data.next){
-    div.append(`<br><a id="next" className="btn btn-read-more" href="${data.next}">Previous articles</a>&nbsp; &nbsp;`);
+    div.append(`<br><a id="next" className="btn btn-read-more" href="${data.next}">Next articles</a>&nbsp; &nbsp;`);
   }
   if (data.previous){
-    div.append(`<a id="previous" className="btn btn-read-more" href="${data.previous}">Next articles</a>`);
+    div.append(`<a id="previous" className="btn btn-read-more" href="${data.previous}">Previous articles</a>`);
   }
   if (document.querySelector('#next')){
     document.querySelector('#next').onclick = UpDownArticleList;
@@ -49,7 +51,7 @@ function updateArticleList(data) {
 
 function UpDownArticleList(e) {
   e.preventDefault()
-  const link = e.path[0].href;
+  const link = $(this).attr('href')
   $.ajax({
     url: link,
     type: 'get',
@@ -61,7 +63,9 @@ function UpDownArticleList(e) {
 
 }
 
-const articleHtml = (title, author, image, content, updated, url, commentsCount) => {
+
+// заполняем одну статью
+const articleHtml = (title, author, image, content, updated, url, commentsCount, likes) => {
   return `
    <div class="row">
       <div class="col-md-12 post">
@@ -79,7 +83,7 @@ const articleHtml = (title, author, image, content, updated, url, commentsCount)
             <span class="glyphicon glyphicon-user"></span>by <a href="#">${author}</a> |
             <span class="glyphicon glyphicon-calendar"></span> ${updated}
             <span class="glyphicon glyphicon-comment"></span><a href="#"> ${commentsCount} Comments</a> |
-            <i class="icon-share"></i><a href="#">39 Shares</a> |
+            <i class="icon-share"></i><a href="#">${likes} Likes</a> |
             <span class="glyphicon glyphicon-tags"></span> Tags: <a href="#">
             <span class="label label-info">Snipp</span></a> <a href="#">
             <span class="label label-info">Bootstrap</span></a> <a href="#">

@@ -13,7 +13,7 @@ urlpatterns = [
     path('', include('auth_app.urls')),
     path('', include('blog.urls')),
     path('profile/', include('user_profile.urls')),             # добавил
-    #path('profile/', include('user_profile.actions.urls')),     # добавил
+    path('action/', include('action.urls')),     # добавил
     path('', include('contact_us.urls')),
     path(f'{admin_url}/', admin.site.urls),
     path(f'{admin_url}/defender/', include('defender.urls')),

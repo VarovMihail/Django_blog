@@ -15,10 +15,9 @@ class SignUpView(GenericAPIView):
     serializer_class = serializers.UserSignUpSerializer
 
     def post(self, request):
-        print(request.data, request.method)
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(f'{serializer.validated_data=}')
         user_service = UserService()
         user = user_service.create_user(serializer.validated_data)
         mail = VerifyEmail()

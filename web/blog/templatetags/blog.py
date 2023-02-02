@@ -11,3 +11,6 @@ def categories_list():
     queryset = Category.objects.all()[:7]
     serializer = CategorySerializer(queryset, many=True)
     return serializer.data
+
+# Регистрация шаблонного тега
+# https://evileg.com/ru/post/13/

@@ -41,5 +41,9 @@
 </div><!--/col-9-->
     {% include 'user_profile/include/modal_followers.html' %}
 
-
 {% endblock container %}
+
+{% block jquery %}
+{#$.getScript('{% static 'user_profile/js/followersApi_function.js' %}');#}
+$.getScript('{% static 'user_profile/js/profile.js' %}');
+{% endblock %}

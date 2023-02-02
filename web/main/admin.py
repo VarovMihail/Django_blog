@@ -5,6 +5,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
+from action.admin import FollowerInline
+
 User = get_user_model()
 
 
@@ -13,6 +15,7 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('-id',)
     list_display = ('email', 'full_name', 'is_active', 'id', 'gender', 'birthday')
     search_fields = ('first_name', 'last_name', 'email')
+    inlines = [FollowerInline,]
 
     fieldsets = (
         (_('Personal info'), {'fields': ('id', 'first_name', 'last_name', 'email', 'avatar')}),
