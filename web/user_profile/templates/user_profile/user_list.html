@@ -1,6 +1,10 @@
 {% extends "user_profile/base.html" %}
 {% load i18n static %}
 
+{% block header %}
+{% include 'includes/header.html'  with selected='user_list' %}
+{% endblock header %}
+
 {% block container %}
   <div class="row">
     <div class="span12">
@@ -28,5 +32,6 @@
 {% endblock container %}
 
 {% block jquery %}
-$.getScript('{% static 'actions/js/follow.js' %}');
+{#$.getScript('{% static 'actions/js/follow.js' %}');#}
+$.getScript('{% static 'user_profile/js/all_users_list.js' %}');
 {% endblock %}

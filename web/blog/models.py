@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from rest_framework.reverse import reverse_lazy
 
+from action.models import LikeDislike
 from .choices import ArticleStatus
 
 User = get_user_model()
@@ -39,6 +40,13 @@ class Article(models.Model):
     status = models.PositiveSmallIntegerField(choices=ArticleStatus.choices, default=ArticleStatus.INACTIVE)
     image = models.ImageField(upload_to='articles/', blank=True, default='no-image-available.jpg')
     objects = models.Manager()
+    votes = GenericRelation(LikeDislike, related_query_name='articles')
+
+    def likes(self) -> int:
+        return self.votes.likes().count()
+
+    def dislikes(self) -> int:
+        return self.votes.dislikes().count()
 
     @property
     def short_title(self):
@@ -74,6 +82,7 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', null=True, blank=True)
+    votes = GenericRelation(LikeDislike, related_query_name='comments')
 
     objects = models.Manager()
 
@@ -81,17 +90,19 @@ class Comment(models.Model):
         verbose_name = _('Comment')
         verbose_name_plural = _('Comments')
 
+    def likes(self):
+        return self.votes.count()
 
 
-class Like(models.Model):
-    class Vote(models.IntegerChoices):
-        LIKE = 1
-        DISLIKE = -1
-
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
-    created = models.DateTimeField(auto_now=True)
-    vote = models.SmallIntegerField(choices=Vote.choices)
+# class Like(models.Model):
+#     class Vote(models.IntegerChoices):
+#         LIKE = 1
+#         DISLIKE = -1
+#
+#     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
+#     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes', null=True, blank=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+#     created = models.DateTimeField(auto_now=True)
+#     vote = models.SmallIntegerField(choices=Vote.choices)
 
 
