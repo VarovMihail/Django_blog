@@ -34,6 +34,7 @@ class SubscribeButtonView(generics.GenericAPIView):
     """Подписаться/отписаться на пользователя"""
     serializer_class = SubscribeButtonSerializer
 
+    @swagger_auto_schema(**swagger_schemas.subscribe_schema)
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -51,10 +52,9 @@ class FollowersButtonView(generics.ListAPIView):  # Или нужно Retrieve ?
     serializer_class = FollowersFollowingButtonSerializer
 
     def get_queryset(self):
-        q = User.objects.filter(following__id=self.kwargs['pk'])
+
         print(1, self.request.query_params)
         print(2, self.kwargs)
-        #print(q.query)
 
         if self.request.query_params['button_name'] == 'followingButton':
             """Вернуть записи, где я подписчик"""
