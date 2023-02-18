@@ -47,6 +47,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     url = serializers.URLField(read_only=True, source='get_absolute_url')
+
     class Meta:
         model = Article
         fields = ['id', 'title', 'image', 'updated', 'created', 'short_content', 'author', 'url', 'comment_set', 'likes']
@@ -55,6 +56,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 class ArticleDetailSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     like_status = serializers.SerializerMethodField(method_name='get_like_status')
+
     class Meta:
         model = Article
         fields = ['id', 'title', 'image', 'updated', 'created', 'content', 'author', 'likes', 'dislikes', 'like_status']

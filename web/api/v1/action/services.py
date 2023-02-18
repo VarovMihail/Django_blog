@@ -12,7 +12,7 @@ from blog.models import Article, Comment
 User = get_user_model()
 
 
-class LikeService():
+class LikeService:
     def __init__(self, user: User, vote: int, model: LikeModel, object_id: int):
         self.user = user
         self.vote = vote
@@ -73,7 +73,7 @@ class LikeService():
         return data
 
 
-class FollowService():
+class FollowService:
     def __init__(self, current_user: User, content_maker_id: int):
         self.follower = current_user
         self.content_maker = FollowService.get_user_object(content_maker_id)
@@ -86,10 +86,9 @@ class FollowService():
         else:
             self.delete_subscribe_obj()
             #subscribe_status = SubscribeStatus.UNSUBSCRIBE.value
+            # 'followers': self.follower.following.all().count(),
 
         data = {
-            'followers': self.follower.following.all().count(),
-            # 'subscribe_status': self.get_subscribe_status(),
             'subscribe_status': self.get_subscribe_status().value,
             'followers_count': self.followers_count(),
             'following_count': self.following_count()

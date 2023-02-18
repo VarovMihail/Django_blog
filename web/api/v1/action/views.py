@@ -1,4 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import AllowAny
+
 from . import swagger_schemas
 from django.contrib.auth import get_user_model
 from rest_framework import generics, status
@@ -34,6 +36,7 @@ class SubscribeButtonView(generics.GenericAPIView):
     """Подписаться/отписаться на пользователя"""
     serializer_class = SubscribeButtonSerializer
 
+    @swagger_auto_schema(**swagger_schemas.subscribe_schema)
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -49,12 +52,12 @@ class SubscribeButtonView(generics.GenericAPIView):
 class FollowersButtonView(generics.ListAPIView):  # Или нужно Retrieve ??
     """Вернуть тех, кто подписан на меня, или тех, на кого подписан я"""
     serializer_class = FollowersFollowingButtonSerializer
+    permission_classes = (AllowAny, )
 
     def get_queryset(self):
-        q = User.objects.filter(following__id=self.kwargs['pk'])
+
         print(1, self.request.query_params)
         print(2, self.kwargs)
-        #print(q.query)
 
         if self.request.query_params['button_name'] == 'followingButton':
             """Вернуть записи, где я подписчик"""
