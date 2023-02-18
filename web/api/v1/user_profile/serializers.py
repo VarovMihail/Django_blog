@@ -74,10 +74,11 @@ class FillOutViewSerializer(serializers.ModelSerializer):
 
 
 class AllUsersSerializer(serializers.ModelSerializer):
+    url = serializers.URLField(read_only=True, source='get_absolute_url')
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'gender', 'birthday', 'avatar']
+        fields = ['id', 'url', 'full_name', 'first_name', 'last_name', 'email', 'gender', 'birthday', 'avatar']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

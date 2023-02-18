@@ -14,8 +14,6 @@ celerybeat*
 .python_history
 .coverage
 .cache
-web/media/*
-!web/media/default.jpg
 htmlcov
 venv
 backup

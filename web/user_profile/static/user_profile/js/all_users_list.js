@@ -26,13 +26,15 @@ function printUserList (data) {
     let avatar = (user.avatar == null) ? "https://oir.mobi/uploads/posts/2022-08/1661385261_40-oir-mobi-p-standartnii-fon-vatsap-instagram-56.png" : user.avatar
     //let avatar = (user.avatar == null) ? "http://localhost:8008/media/default.jpg" : user.avatar
 
+
     div.append(`
        <li>
           <div class="comment-main-level">
               <div class="comment-avatar"><img src=${avatar} width="150" height="150" alt=""></div>
               <div class="comment-box">
                   <div class="comment-head">
-                      <h3 class="comment-name by-author"><a href="http://localhost:8008/profile/user-list/${user.id}">${user.first_name} ${user.last_name}</a></h3>
+<!--                      <h3 class="comment-name by-author"><a href="http://localhost:8008/profile/user-list/${user.id}">${user.first_name} ${user.last_name}</a></h3>-->
+                      <h3 class="comment-name by-author"><a href="${user.url}">${user.full_name}</a></h3>
                       <span></span>
 
 

@@ -3,6 +3,7 @@ from typing import Optional, TypeVar
 from django.contrib.auth.models import AbstractUser
 from django.core import signing
 from django.db import models
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from src import settings
@@ -85,3 +86,5 @@ class User(AbstractUser):
             return None
         return user
 
+    def get_absolute_url(self):
+        return reverse_lazy('user_profile:user', kwargs={'pk': self.id})
