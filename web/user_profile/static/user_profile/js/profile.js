@@ -20,7 +20,8 @@ function changeRegistrationData (e) {
   e.preventDefault();
   let form = $(this);
   $.ajax({
-    url: '/api/v1/user-profile/fill-out/',
+    // url: '/api/v1/user-profile/fill-out/',
+    url: '/api/v1/user-profile/change-data/',
     type: 'PUT',
     data: form.serialize(),
     success: function (data) {

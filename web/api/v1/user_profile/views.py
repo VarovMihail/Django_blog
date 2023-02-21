@@ -11,7 +11,7 @@ from rest_framework.parsers import MultiPartParser
 
 from main.models import UserType
 from api.v1.user_profile.serializers import ChangePassSerializer, AvatarUpdateSerializer, FillOutViewSerializer, \
-    UserInfoSerializer, AllUsersSerializer
+    UserInfoSerializer, AllUsersSerializer, ChangeDataSerializer
 
 User: UserType = get_user_model()
 
@@ -74,6 +74,13 @@ class FillOutView(generics.RetrieveAPIView):
         # print(f'{str(followers.query) = }')
 
         return instance
+
+
+class ChangeDataAPIView(generics.UpdateAPIView):
+    serializer_class = ChangeDataSerializer
+
+    def get_queryset(self):
+        return User.objects.get(pk=self.request.user.id)
 
 
 class AllUsersAPIView(generics.ListAPIView):

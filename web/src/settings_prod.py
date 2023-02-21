@@ -1,10 +1,8 @@
 from .settings import *
 from .settings import USE_HTTPS
-
+CSRF_TRUSTED_ORIGINS = ['2023info.ru']
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost',
-    'http://localhost:8000',
-    'http://localhost:3000',
+    'https://2023info.ru'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -21,3 +19,4 @@ if USE_HTTPS:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     USE_X_FORWARDED_HOST = True
+

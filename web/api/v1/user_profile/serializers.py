@@ -73,6 +73,13 @@ class FillOutViewSerializer(serializers.ModelSerializer):
         read_only_fields = ['email']
 
 
+class ChangeDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'gender', 'birthday', 'avatar']
+        read_only_fields = ['email']
+
+
 class AllUsersSerializer(serializers.ModelSerializer):
     url = serializers.URLField(read_only=True, source='get_absolute_url')
 
