@@ -1,6 +1,6 @@
 from .settings import *
 from .settings import USE_HTTPS
-CSRF_TRUSTED_ORIGINS = ['2023info.ru']
+CSRF_TRUSTED_ORIGINS = ['https://2023info.ru']
 CORS_ALLOWED_ORIGINS = [
     'https://2023info.ru'
 ]
