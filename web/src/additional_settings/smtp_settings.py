@@ -13,3 +13,4 @@ EMAIL_USE_TLS = int(environ.get('EMAIL_USE_TLS', 0))
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 print(f'{EMAIL_HOST = }')
+
