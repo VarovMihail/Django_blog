@@ -10,7 +10,10 @@ function blogList() {
     type: 'GET',
     success: updateArticleList,
     error: function (data) {
-      console.log("error", data);
+      console.log("error blogList", data);
+      Toast.show(`${data.responseText}`, 'error')
+      $('.container').empty()
+      $('.container').append("Too Many Requests")
     }
   })
 }
