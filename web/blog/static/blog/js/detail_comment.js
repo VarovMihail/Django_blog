@@ -48,8 +48,9 @@ function commentCreate(e) {
       localStorage.removeItem('commentId')
     },
     error: function (data) {
-      console.log("error commentCreate", data.responseText);
-      Toast.show('Error comment', 'error')
+      console.log("error commentCreate", data.responseText.detail);
+      //Toast.show('Error comment', 'error')
+      Toast.show(`${data.responseJSON.detail}`, 'error')
     }
   })
 

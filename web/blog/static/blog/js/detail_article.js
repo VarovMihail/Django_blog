@@ -34,6 +34,10 @@ function blogDetail() {
     },
     error: function (data) {
       console.log("error blogDetail", data);
+         //Toast.show(`${data.responseText}`, 'error')
+         Toast.show(`${data.responseJSON.detail}`, 'error')
+      $('.container').empty()
+      $('.container').append("Too Many Requests")
     }
   })
 }
@@ -123,5 +127,5 @@ function likeDislikeArticle () {
       Toast.show(`${data.responseJSON.detail}`, 'error')
     }
   })
-  } else {Toast.show('go to sing in', 'error')}
+  } else {Toast.show('Please sing in', 'error')}
 }
