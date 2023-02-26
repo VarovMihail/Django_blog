@@ -16,6 +16,16 @@ from api.v1.user_profile.serializers import ChangePassSerializer, AvatarUpdateSe
 User: UserType = get_user_model()
 
 
+class ChangeDataAPIView(generics.UpdateAPIView):
+    serializer_class = ChangeDataSerializer
+
+    def get_queryset(self):
+        return User.objects.all()
+
+    def get_object(self):
+        return self.request.user
+
+
 class ChangePassAPIView(generics.UpdateAPIView):
     """Смена пароля из профайла"""
     queryset = User.objects.all()
@@ -74,13 +84,6 @@ class FillOutView(generics.RetrieveAPIView):
         # print(f'{str(followers.query) = }')
 
         return instance
-
-
-class ChangeDataAPIView(generics.UpdateAPIView):
-    serializer_class = ChangeDataSerializer
-
-    def get_queryset(self):
-        return User.objects.get(pk=self.request.user.id)
 
 
 class AllUsersAPIView(generics.ListAPIView):
