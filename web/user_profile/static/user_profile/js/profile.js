@@ -104,6 +104,9 @@ function uploadPhoto(e) {
         console.log('success uploadPhoto', data)
         Toast.show('Success upload photo', 'success')
         $("#avatar").attr("src", data.avatar)
+        window.location.reload()
+        //fillOutHome()
+        // $('#Layer_1').hidden = true
       },
       error: function (data) {
         console.log('error', data)
