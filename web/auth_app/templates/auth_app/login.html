@@ -34,9 +34,20 @@
           <div class="col-xs-6 col-sm-6 col-md-6">
             <a href="{% url 'auth_app:sign_up' %}" class="btn btn-lg btn-primary btn-block">Register</a>
           </div>
+
         </div>
+
       </fieldset>
     </form>
+    <br>
+    <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-6">
+            <button id="GithubLogin"  class="btn btn-lg btn-primary btn-block">Github login</button>
+          </div>
+           <div class="col-xs-6 col-sm-6 col-md-6">
+             <button id="VKLogin"  class="btn btn-lg btn-success btn-block">VK login</button>
+          </div>
+    </div>
   </div>
 </div>
 {% include 'auth_app/includes/forgot_password_modal.html' %}
