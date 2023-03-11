@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from main.models import UserType
 from api.v1.auth_app.services import UserService
+from django.conf import settings
 
 User: UserType = get_user_model()
 
@@ -92,3 +93,37 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 class VerifyEmailSerializer(serializers.Serializer):
     key = serializers.CharField()
+
+
+class GithubCallbackSerializer(serializers.Serializer):
+    code = serializers.CharField()
+    state = serializers.CharField()
+
+    def validate_state(self, state):
+        if state != settings.SOCIALACCOUNT_PROVIDERS['github']['APP']['state']:
+            raise serializers.ValidationError({'state': error_messages['state_not_match']})
+        return state
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

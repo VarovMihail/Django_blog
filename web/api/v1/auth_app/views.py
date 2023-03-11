@@ -5,9 +5,11 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.conf import settings
 
 from . import serializers
-from .services import PasswordRecoveryEmail, User, UserService, VerifyEmail, full_logout
+from .services import PasswordRecoveryEmail, User, UserService, VerifyEmail, full_logout, GithubHandler
 
 
 class SignUpView(GenericAPIView):
@@ -91,3 +93,32 @@ class PasswordResetConfirmView(GenericAPIView):
             {'detail': _('Password has been reset with the new password.')},
             status=status.HTTP_200_OK,
         )
+
+
+class GithubInitView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        data = {
+            'client_id': settings.SOCIALACCOUNT_PROVIDERS['github']['APP']['client_id_2'],
+            'redirect_uri': 'http://localhost:8008/callback/github',
+            'scope': 'user email user:email',
+            #'scope': 'user:email',
+           # 'login': '8605495@mail.ru',
+            'state': 'abcd',
+        }
+        return Response(data)
+
+
+class GithubCallbackView(GenericAPIView):
+    serializer_class = serializers.GithubCallbackSerializer
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        service = GithubHandler()
+        access_token = service.get_access_token(serializer.data['code'])
+        print(access_token)
+        user_data = service.get_user_data(access_token)
+        return Response({})

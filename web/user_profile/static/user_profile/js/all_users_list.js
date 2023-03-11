@@ -22,7 +22,8 @@ function printUserList (data) {
   let div = $('.row').first()
   //div.empty()
   //div.append('ul')
-  for (user of data.results) {
+  //for (user of data.results) {
+  for (user of data) {
     let avatar = (user.avatar == null) ? "https://oir.mobi/uploads/posts/2022-08/1661385261_40-oir-mobi-p-standartnii-fon-vatsap-instagram-56.png" : user.avatar
     //let avatar = (user.avatar == null) ? "http://localhost:8008/media/default.jpg" : user.avatar
 

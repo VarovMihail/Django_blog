@@ -3,6 +3,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from api.v1.auth_app.views import GithubCallbackView
+from main.views import TemplateAPIView
 from .yasg import urlpatterns as swagger_url
 
 admin_url = settings.ADMIN_URL
@@ -20,6 +22,8 @@ urlpatterns = [
     path('api/', include('rest_framework.urls')),
     path('rosetta/', include('rosetta.urls')),
     path('summernote/', include('django_summernote.urls')),
+    path('accounts/', include('allauth.urls')),
+
 ]
 
 urlpatterns += swagger_url

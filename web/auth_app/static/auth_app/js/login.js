@@ -1,11 +1,46 @@
 console.log('login page')
 
+
 $(function () {
   $('#loginForm').submit(login);
   $('#forgotPasswordForm').submit(resetPassword);
+  $('#GithubLogin').click(GithubLogin);
+  $('#VKLogin').click(VKLogin);
 });
 
+function GithubLogin() {
+  console.log('GithubLogin')
+  $.ajax({
+    url: '/api/v1/auth/github/init/',
+    type: 'GET',
+    success: function (data) {
+      console.log("success GithubLogin", data)
+      let params = $.param(data)
+      console.log(params)
+      window.location.replace(`https://github.com/login/oauth/authorize?${params}`)
+    },
+    error: function (data) {
+      console.log("error GithubLogin", data)
+    }})
 
+}
+
+function VKLogin() {
+  console.log('VKLogin')
+  $.ajax({
+    url: '/api/v1/auth/vk/init/',
+    type: 'GET',
+    success: function (data) {
+      console.log("success VKLogin", data)
+      let params = $.param(data)
+      console.log(params)
+      window.location.replace(`https://github.com/login/oauth/authorize?${params}`)
+    },
+    error: function (data) {
+      console.log("error VKLogin", data)
+    }})
+
+}
 
 function resetPassword(e) {
   let form = $(this);

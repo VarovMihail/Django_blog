@@ -1,6 +1,9 @@
+from enum import Enum
+from pprint import pprint
 from typing import TYPE_CHECKING, NamedTuple, Optional
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode, urljoin, urlparse, parse_qs
 
+import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -209,3 +212,32 @@ def full_logout(request):
         response.data = {"detail": message}
         response.status_code = status.HTTP_200_OK
     return response
+
+class GithubHandler:
+    def __init__(self):
+        self.config: dict = settings.SOCIALACCOUNT_PROVIDERS['github']['APP']
+
+    class Endpoint(Enum):
+        ACCESS_TOKEN = 'https://github.com/login/oauth/access_token'
+        USER_INFO = 'https://api.github.com/user'
+
+    def get_access_token(self, code: str):
+        data = {
+            'client_id': self.config['client_id_2'],
+            'client_secret': self.config['secret_2'],
+            'redirect_uri': 'http://localhost:8008/callback/github', # просто для верификации, повторного запроса на него не будет
+            'code': code
+        }
+        response = requests.post(self.Endpoint.ACCESS_TOKEN.value, data, headers={'Accept': 'application/json'})
+        data = response.json()
+        access_token = data.get('access_token')
+        if not access_token:
+            raise ValidationError('not token')
+        return access_token
+
+    def get_user_data(self, access_token):
+        response = requests.post(self.Endpoint.USER_INFO.value, headers={'Authorization': f'Bearer {access_token}'})
+        pprint(response.json())
+        return response.json()
+
+

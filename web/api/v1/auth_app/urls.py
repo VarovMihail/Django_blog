@@ -6,6 +6,9 @@ from . import views
 app_name = 'auth_app'
 
 
+
+
+
 urlpatterns = [
     path('sing-in/', views.LoginView.as_view(), name='sign-in'),
     path('sign-up/', views.SignUpView.as_view(), name='sign-up'),
@@ -16,4 +19,8 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view()),
     path('token/verify/', TokenVerifyView.as_view()),
     path('token/', TokenObtainPairView.as_view()),      # добавил посмотреть
+    path('github/init/', views.GithubInitView.as_view()),
+    path('github/callback/', views.GithubCallbackView.as_view()),
+
+
 ]

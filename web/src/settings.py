@@ -54,6 +54,41 @@ EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 REST_AUTH_TOKEN_MODEL = None
 
+SITE_ID = 1
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'APP': {
+            #'client_id': '19d44189dd173121e832',
+            'client_id_2': '9298f2bf235c6bfe9190',
+            #'secret': '59284979316e49312d06ce06bd42f43eb8a6ffaf',
+            'secret_2': '622ae9b4d786fe5069c4002172cb6ca881f3b60a',
+            'key': '',
+            'state': 'abcd'
+        }
+    },
+    'google': {
+            'SCOPE': [
+                'profile',
+                'email',
+            ],
+            'AUTH_PARAMS': {
+                'access_type': 'online',
+            },
+            'OAUTH_PKCE_ENABLED': True,
+        }
+}
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,6 +96,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
 
 THIRD_PARTY_APPS = [
@@ -73,6 +109,12 @@ THIRD_PARTY_APPS = [
     'rosetta',
     'django_summernote',
     'django_filters',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.vk',
 ]
 
 LOCAL_APPS = [
@@ -234,3 +276,5 @@ if (SENTRY_DSN := os.environ.get('SENTRY_DSN')) and ENABLE_SENTRY:
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True,
     )
+
+

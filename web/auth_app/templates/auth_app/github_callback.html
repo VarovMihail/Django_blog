@@ -1,0 +1,9 @@
+{% extends "blog/base.html" %}
+{% load static main %}
+
+
+
+{% block jquery %}
+$.getScript('{% static 'auth_app/js/github_callback.js' %}');
+
+{% endblock %}

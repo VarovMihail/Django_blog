@@ -90,9 +90,11 @@ class AllUsersAPIView(generics.ListAPIView):
     """Список всех пользователей"""
     permission_classes = (AllowAny,)
     serializer_class = AllUsersSerializer
+    pagination_class = None
 
     def get_queryset(self):
         return User.objects.order_by('id')
+
 
 class UserInfoAPIView(generics.RetrieveAPIView):
     """Страница пользователя, которую видят все"""
