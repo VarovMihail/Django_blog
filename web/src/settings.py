@@ -277,4 +277,5 @@ if (SENTRY_DSN := os.environ.get('SENTRY_DSN')) and ENABLE_SENTRY:
         send_default_pii=True,
     )
 
+CHAT_URL = 'http://localhost:8000'
 

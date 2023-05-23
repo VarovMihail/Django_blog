@@ -74,8 +74,24 @@ function subscribe () {
 }
 
 function message(e) {
-  alert('message')
+  let data = {
+    'user_id': userPk,
+  }
+  $.ajax({
+    url: '/api/v1/chat/open/',
+    type: 'get',
+    data: data,
+    success: function (data) {
+            console.log('success message', data)
+      window.open(data.url, '_blank').focus()
+    },
+    error: function (data) {
+      console.log('error message', data)
+    }
+  })
 }
+
+
 
 function addSubscribeMessageButton(subscribeStatus) {
   let subscribeButton = $('#subscribe')
