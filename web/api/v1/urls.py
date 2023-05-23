@@ -8,4 +8,5 @@ urlpatterns = [
     path('contact/', include('api.v1.contact_us.urls')),
     path('user-profile/', include('api.v1.user_profile.urls')),
     path('action/', include('api.v1.action.urls')),
+    path('chat/', include('api.v1.chat.urls')),
 ]
